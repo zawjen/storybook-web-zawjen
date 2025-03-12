@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import moment from "moment-hijri"; // Ensure this is used for Hijri calendar
 import { Button } from "@/components/ui/button"; // Using ShadCN Button
+import { TDatePickerPopoverStyles } from "./types";
 
 interface HijriDatePickerProps {
   setSelectedDate: (a: moment.Moment) => void;
   selectedDate: moment.Moment;
   toggleCalendar: VoidFunction;
   selectedCalendar: "gregorian" | "hijri";
+  style?: Omit<TDatePickerPopoverStyles, "container">;
 }
 
 moment.updateLocale("en", { week: { dow: 6 } });
@@ -15,6 +17,7 @@ const HijriDatePicker: React.FC<HijriDatePickerProps> = ({
   selectedDate,
   toggleCalendar,
   selectedCalendar,
+  style,
 }) => {
   // Initialize the current date with Hijri format
   const [currentDate, setCurrentDate] = useState(moment().locale("en"));
@@ -37,7 +40,7 @@ const HijriDatePicker: React.FC<HijriDatePickerProps> = ({
       },
     });
     const startOfMonth = currentDate.clone().startOf("iMonth").startOf("week");
-    const endOfMonth = currentDate.clone().endOf("iMonth").endOf("week"); 
+    const endOfMonth = currentDate.clone().endOf("iMonth").endOf("week");
     const days = [];
     let day = startOfMonth;
 
@@ -53,16 +56,25 @@ const HijriDatePicker: React.FC<HijriDatePickerProps> = ({
           variant="ghost"
           key={dayClone.format("YYYY/MM/DD")} // Unique key for each day
           onClick={() => setSelectedDate(dayClone)} // Set selected date
-          className={`w-full h-6 p-0 text-sm 
+          className={
+            style?.button?.days?.className +
+            ` w-full h-6 p-0 text-sm 
           ${
             isSelected
               ? "bg-green-500 text-white" // Style for selected date
               : isToday
               ? "bg-gray-300 text-black" // Style for today
               : "hover:bg-gray-200" // Hover effect
-          }`}
+          }`
+          }
           style={{
-            fontSize: "clamp(12px, 1.8vw, 16px)", // Responsive font size
+            background: style?.button?.days?.backgroundColor,
+            borderColor: style?.button?.days?.border?.color,
+            borderWidth: style?.button?.days?.border?.width,
+            color: style?.button?.days?.color,
+            fontSize:
+              style?.button?.days?.fontSize ?? "clamp(12px, 14px, 16px)",
+            fontWeight: style?.button?.days?.fontWeight,
           }}
         >
           {dayClone.locale("en").format("iD")} {/* Display the Hijri day */}
@@ -101,14 +113,50 @@ const HijriDatePicker: React.FC<HijriDatePickerProps> = ({
     >
       <div className="flex justify-between items-center mb-1">
         {/* Month navigation */}
-        <Button variant="ghost" size="icon" onClick={handlePrevMonth}>
+        <Button
+          style={{
+            background: style?.button?.arrows?.backgroundColor,
+            borderColor: style?.button?.arrows?.border?.color,
+            borderWidth: style?.button?.arrows?.border?.width,
+            color: style?.button?.arrows?.color,
+            fontSize: style?.button?.arrows?.fontSize,
+            fontWeight: style?.button?.arrows?.fontWeight,
+          }}
+          className={style?.button?.arrows?.className}
+          variant="ghost"
+          size="icon"
+          onClick={handlePrevMonth}
+        >
           &lt;
         </Button>
-        <span className="text-sm">
+        <span
+          style={{
+            background: style?.button?.month?.backgroundColor,
+            borderColor: style?.button?.month?.border?.color,
+            borderWidth: style?.button?.month?.border?.width,
+            color: style?.button?.month?.color,
+            fontSize: style?.button?.month?.fontSize,
+            fontWeight: style?.button?.month?.fontWeight,
+          }}
+          className={style?.button?.month?.className + " text-sm"}
+        >
           {currentDate.locale("ar").format("iMMMM iYYYY")}
         </span>
         {/* Show Hijri month and year */}
-        <Button variant="ghost" size="icon" onClick={handleNextMonth}>
+        <Button
+          style={{
+            background: style?.button?.arrows?.backgroundColor,
+            borderColor: style?.button?.arrows?.border?.color,
+            borderWidth: style?.button?.arrows?.border?.width,
+            color: style?.button?.arrows?.color,
+            fontSize: style?.button?.arrows?.fontSize,
+            fontWeight: style?.button?.arrows?.fontWeight,
+          }}
+          className={style?.button?.arrows?.className}
+          variant="ghost"
+          size="icon"
+          onClick={handleNextMonth}
+        >
           &gt;
         </Button>
       </div>
@@ -120,8 +168,19 @@ const HijriDatePicker: React.FC<HijriDatePickerProps> = ({
             id="year-select"
             value={currentDate.iYear()}
             onChange={handleYearChange}
-            className="cursor-pointer border rounded py-[0.5rem] px-[0.5rem] text-xs max-h-[150px]"
-            style={{ fontSize: "clamp(12px, 1.5vw, 14px)" }}
+            className={
+              style?.selectInput?.className +
+              " cursor-pointer border rounded py-[0.5rem] px-[0.5rem] text-xs max-h-[150px]"
+            }
+            style={{
+              background: style?.selectInput?.backgroundColor,
+              borderColor: style?.selectInput?.border?.color,
+              borderWidth: style?.selectInput?.border?.width,
+              color: style?.selectInput?.color,
+              fontSize:
+                style?.selectInput?.fontSize ?? "clamp(12px, 13px, 14px)",
+              fontWeight: style?.selectInput?.fontWeight,
+            }}
           >
             {Array.from({ length: 100 }, (_, i) => (
               <option key={i} value={moment().iYear() - 50 + i}>
@@ -131,7 +190,18 @@ const HijriDatePicker: React.FC<HijriDatePickerProps> = ({
           </select>
         </div>
         <div>
-          <Button onClick={toggleCalendar}>
+          <Button
+            style={{
+              background: style?.button?.toggle?.backgroundColor,
+              borderColor: style?.button?.toggle?.border?.color,
+              borderWidth: style?.button?.toggle?.border?.width,
+              color: style?.button?.toggle?.color,
+              fontSize: style?.button?.toggle?.fontSize,
+              fontWeight: style?.button?.toggle?.fontWeight,
+            }}
+            className={style?.button?.toggle?.className}
+            onClick={toggleCalendar}
+          >
             {selectedCalendar === "hijri"
               ? "Switch to Gregorian"
               : "Switch to Hijri"}

@@ -13,8 +13,13 @@ import HijriDatePicker from "./HijriDatePicker";
 import GregorianDatePicker from "./GregorianDatePicker";
 import { CalendarDaysIcon } from "lucide-react";
 import { Loader2 } from "lucide-react"; // Icon for the spinner
+import { IDatePicker } from "./types";
 
-const DatePicker = () => {
+const DatePicker: React.FC<IDatePicker> = ({
+  inputStyle,
+  onSetSelectedDate,
+  datepickerStyle,
+}) => {
   const [calendarType, setCalendarType] = useState<"gregorian" | "hijri">(
     "hijri"
   );
@@ -34,12 +39,18 @@ const DatePicker = () => {
   // Confirm date selection
   const handleGregorianDateSelection = (date: moment.Moment) => {
     setLoading(true); // Trigger loading state when selecting a date
+    if (onSetSelectedDate) {
+      onSetSelectedDate(date.toISOString());
+    }
     setSelectedDate(moment(date.toISOString()));
 
     setTimeout(() => setLoading(false), 500);
   };
   const handleHijriDateSelection = (date: moment.Moment) => {
     setLoading(true); // Trigger loading state when selecting a date
+    if (onSetSelectedDate) {
+      onSetSelectedDate(date.toISOString());
+    }
     setSelectedDate(momentHijri(date.toISOString()).locale("ar"));
 
     setTimeout(() => setLoading(false), 500);
@@ -59,25 +70,46 @@ const DatePicker = () => {
       <div className="flex items-center gap-4">
         <Popover>
           <PopoverTrigger asChild>
-            <div className="cursor-pointer flex border p-2 rounded">
+            <div
+              className={" cursor-pointer flex border p-2 rounded"}
+              style={{
+                background: inputStyle?.container?.backgroundColor,
+                borderColor: inputStyle?.container?.border?.color,
+                borderWidth: inputStyle?.container?.border?.width,
+                color: inputStyle?.color,
+                fontSize: inputStyle?.fontSize,
+                fontWeight: inputStyle?.fontWeight,
+              }}
+            >
               <input
                 type="text"
                 value={selectedDate.format(
                   isGregorianDate() ? "YYYY/MM/DD" : "iYYYY/iMM/iDD"
                 )}
                 readOnly
-                className="max-w-[100px]"
+                className={inputStyle?.className + " max-w-[100px]"}
               />
-              <CalendarDaysIcon className="ml-2" />
+              <CalendarDaysIcon
+                className={" ml-2"}
+                color={inputStyle?.container?.icon?.color}
+              />
             </div>
           </PopoverTrigger>
-          <PopoverContent className="p-2">
+          <PopoverContent
+            className="p-2"
+            style={{
+              background: datepickerStyle?.container?.backgroundColor,
+              borderColor: datepickerStyle?.container?.border?.color,
+              borderWidth: datepickerStyle?.container?.border?.width,
+            }}
+          >
             {calendarType === "gregorian" ? (
               <GregorianDatePicker
                 setSelectedDate={handleGregorianDateSelection}
                 selectedDate={selectedDate}
                 toggleCalendar={toggleCalendar}
                 selectedCalendar={calendarType}
+                style={datepickerStyle}
               />
             ) : (
               <HijriDatePicker
@@ -85,6 +117,7 @@ const DatePicker = () => {
                 selectedDate={selectedDate}
                 toggleCalendar={toggleCalendar}
                 selectedCalendar={calendarType}
+                style={datepickerStyle}
               />
             )}
           </PopoverContent>
