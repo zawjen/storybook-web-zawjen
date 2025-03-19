@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { Button } from "@/components/ui/button"; // Using shadcn Button
-import { TDatePickerCommonStyles, TDatePickerPopoverStyles } from "./types";
+import { TDatePickerCommonStyles, TDatePickerPopoverStyles } from "../types";
 
 interface IGregorianDatePickerProps {
   setSelectedDate: (a: moment.Moment) => void;
@@ -100,6 +100,7 @@ const GregorianDatePicker: React.FC<IGregorianDatePickerProps> = ({
 
   return (
     <div
+      data-testid="gregorian-calendar"
       className="p-1"
       style={{ width: "clamp(210px, 250px, 280px)", height: "auto" }} // Clamp for width
     >

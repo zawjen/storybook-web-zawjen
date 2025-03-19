@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import moment from "moment-hijri"; // Ensure this is used for Hijri calendar
 import { Button } from "@/components/ui/button"; // Using ShadCN Button
-import { TDatePickerPopoverStyles } from "./types";
+import { TDatePickerPopoverStyles } from "../types";
 
 interface HijriDatePickerProps {
   setSelectedDate: (a: moment.Moment) => void;
@@ -108,6 +108,7 @@ const HijriDatePicker: React.FC<HijriDatePickerProps> = ({
 
   return (
     <div
+      data-testid="hijri-calendar"
       className="p-1"
       style={{ width: "clamp(210px, 250px, 280px)", height: "auto" }} // Clamp for width
     >

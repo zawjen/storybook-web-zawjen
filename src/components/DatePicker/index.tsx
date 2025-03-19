@@ -82,6 +82,7 @@ const DatePicker: React.FC<IDatePicker> = ({
               }}
             >
               <input
+                data-testid="calendar-button"
                 type="text"
                 value={selectedDate.format(
                   isGregorianDate() ? "YYYY/MM/DD" : "iYYYY/iMM/iDD"
@@ -96,6 +97,7 @@ const DatePicker: React.FC<IDatePicker> = ({
             </div>
           </PopoverTrigger>
           <PopoverContent
+            data-testid="calendar-popover-container"
             className="p-2"
             style={{
               background: datepickerStyle?.container?.backgroundColor,
@@ -125,7 +127,10 @@ const DatePicker: React.FC<IDatePicker> = ({
       </div>
       {/* Loading state with a spinner */}
       {loading && (
-        <div className="absolute inset-0 flex justify-center items-center bg-gray-100 bg-opacity-70 rounded-lg">
+        <div
+          className="absolute inset-0 flex justify-center items-center bg-gray-100 bg-opacity-70 rounded-lg"
+          role="status"
+        >
           <Loader2 className="animate-spin h-8 w-8 text-gray-600" />
         </div>
       )}
